@@ -20,12 +20,15 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.time.Duration;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 public class CalcPage extends WebPage {
 
     private static final int HISTORY_LENGTH = 10;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyy kk:mm:ss");
+    private static final Duration UPDATE_INTERVAL = Duration.seconds(5);
 
     @SpringBean
     private ExpressionRepository repository;
@@ -76,6 +79,9 @@ public class CalcPage extends WebPage {
             }
         };
 
+        Label historyLength = new Label("historyLength", HISTORY_LENGTH);
+        Label updateInterval = new Label("updateInterval", UPDATE_INTERVAL);
+
         IModel<List<Expression>> latestList = new LoadableDetachableModel<List<Expression>>() {
             protected List<Expression> load() {
                 return repository.getLatest(HISTORY_LENGTH);
@@ -84,16 +90,21 @@ public class CalcPage extends WebPage {
 
         ListView<Expression> listView = new ListView<Expression>("listView", latestList) {
             protected void populateItem(ListItem item) {
-                item.add(new Label("label", item.getModel()));
+                Expression expr = (Expression) item.getModelObject();
+                item.add(new Label("dateTime", expr.getDateTime().format(FORMATTER)));
+                item.add(new Label("expression", expr.toString()));
             }
         };
 
         WebMarkupContainer listContainer = new WebMarkupContainer("theContainer");
         listContainer.setOutputMarkupId(true);
-        listContainer.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)));
+        listContainer.add(new AjaxSelfUpdatingTimerBehavior(UPDATE_INTERVAL));
         listContainer.add(listView);
 
         add(form);
+        add(historyLength);
+        add(updateInterval);
+        add(listContainer);
 
         form.add(feedbackPanel);
         form.add(firstOperand);
@@ -101,6 +112,5 @@ public class CalcPage extends WebPage {
         form.add(secondOperand);
         form.add(result);
         form.add(ajaxButton);
-        form.add(listContainer);
     }
 }

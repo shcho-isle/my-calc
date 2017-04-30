@@ -3,11 +3,8 @@ package com.practice.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
-public class Expression implements Serializable{
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyy kk:mm:ss");
+public class Expression implements Serializable {
 
     private LocalDateTime dateTime;
 
@@ -69,8 +66,7 @@ public class Expression implements Serializable{
 
     @Override
     public String toString() {
-        return "<" + dateTime.format(FORMATTER) +
-                ">\t" + firstOperand.stripTrailingZeros() +
+        return firstOperand.stripTrailingZeros() +
                 " " + operation +
                 " " + secondOperand.stripTrailingZeros() +
                 " = " + result.stripTrailingZeros();

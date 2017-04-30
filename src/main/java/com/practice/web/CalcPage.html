@@ -11,42 +11,62 @@
 </head>
 
 <body>
-<form wicket:id="form">
-    <div class="col-md-7">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="col-md-3">
-                    <input type="number" wicket:id="firstOperand" class="form-control"/>
-                </div>
+<div class="jumbotron">
+    <div class="container">
+        <div class="shadow">
+            <h3>Arithmetic Calculator</h3>
+            <div class="view-box">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <div class="panel panel-default">
+                            <form wicket:id="form">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <input type="number" wicket:id="firstOperand" class="form-control"/>
+                                        </div>
 
-                <div class="col-md-2">
-                    <select wicket:id="operation" class="selectpicker form-control"></select>
-                </div>
+                                        <div class="col-md-2">
+                                            <select wicket:id="operation"
+                                                    class="selectpicker form-control"></select>
+                                        </div>
 
-                <div class="col-md-3">
-                    <input type="number" wicket:id="secondOperand" class="form-control"/>
-                </div>
+                                        <div class="col-md-3">
+                                            <input type="number" wicket:id="secondOperand" class="form-control"/>
+                                        </div>
 
-                <div class="col-md-1">
-                    <input type="submit" wicket:id="submit" class="btn btn-primary" value="="/>
-                </div>
+                                        <div class="col-md-1">
+                                            <input type="submit" wicket:id="submit" class="btn btn-primary"
+                                                   value="="/>
+                                        </div>
 
-                <div class="col-md-3">
-                    <input type="number" wicket:id="result" class="form-control"/>
+                                        <div class="col-md-3">
+                                            <input type="number" wicket:id="result" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <div wicket:id="feedbackMsg"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-danger">
-                <div wicket:id="feedbackMsg"></div>
-            </div>
-            <div wicket:id="theContainer"  class="panel-footer">
-                Application history:
-                <br/><br/>
-                <span wicket:id="listView">
-                    <span wicket:id="label">label</span><br/>
-                </span>
+                The latest <span wicket:id="historyLength">historyLength</span> expressions.
+                Updated every <span wicket:id="updateInterval">updateInterval</span>.
+                <table wicket:id="theContainer" class="table table-striped display">
+                    <tr>
+                        <th>DateTime</th>
+                        <th>Expression</th>
+                    </tr>
+                    <tr wicket:id="listView">
+                        <td><span wicket:id="dateTime">dateTime</span></td>
+                        <td><span wicket:id="expression">expression</span></td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
-</form>
+</div>
 </body>
 </html>
