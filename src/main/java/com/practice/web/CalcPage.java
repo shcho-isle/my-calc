@@ -4,23 +4,33 @@ import com.practice.model.Expression;
 import com.practice.model.Operation;
 import com.practice.repository.ExpressionRepository;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.time.Duration;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 
 public class CalcPage extends WebPage {
+
+    private static final int HISTORY_LENGTH = 10;
 
     @SpringBean
     private ExpressionRepository repository;
 
     public CalcPage() {
-
         final Expression expression = new Expression();
 
         Form<?> form = new Form("form");
@@ -44,12 +54,12 @@ public class CalcPage extends WebPage {
         result.setEnabled(false);
 
         AjaxButton ajaxButton = new AjaxButton("submit") {
-
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 super.onSubmit(target);
 
                 expression.setResult(expression.getOperation().calculate(expression.getFirstOperand(), expression.getSecondOperand()));
+                expression.updateDateTime();
                 repository.save(expression);
 
                 target.add(firstOperand);
@@ -66,6 +76,23 @@ public class CalcPage extends WebPage {
             }
         };
 
+        IModel<List<Expression>> latestList = new LoadableDetachableModel<List<Expression>>() {
+            protected List<Expression> load() {
+                return repository.getLatest(HISTORY_LENGTH);
+            }
+        };
+
+        ListView<Expression> listView = new ListView<Expression>("listView", latestList) {
+            protected void populateItem(ListItem item) {
+                item.add(new Label("label", item.getModel()));
+            }
+        };
+
+        WebMarkupContainer listContainer = new WebMarkupContainer("theContainer");
+        listContainer.setOutputMarkupId(true);
+        listContainer.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)));
+        listContainer.add(listView);
+
         add(form);
 
         form.add(feedbackPanel);
@@ -74,5 +101,6 @@ public class CalcPage extends WebPage {
         form.add(secondOperand);
         form.add(result);
         form.add(ajaxButton);
+        form.add(listContainer);
     }
 }

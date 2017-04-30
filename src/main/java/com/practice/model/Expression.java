@@ -3,16 +3,19 @@ package com.practice.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Expression implements Serializable{
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyy kk:mm:ss");
 
     private LocalDateTime dateTime;
 
     private BigDecimal firstOperand;
 
-    private BigDecimal secondOperand;
-
     private Operation operation;
+
+    private BigDecimal secondOperand;
 
     private BigDecimal result;
 
@@ -28,16 +31,36 @@ public class Expression implements Serializable{
         return firstOperand;
     }
 
-    public BigDecimal getSecondOperand() {
-        return secondOperand;
-    }
-
     public Operation getOperation() {
         return operation;
     }
 
+    public BigDecimal getSecondOperand() {
+        return secondOperand;
+    }
+
     public BigDecimal getResult() {
         return result;
+    }
+
+    public void updateDateTime() {
+        dateTime = LocalDateTime.now();
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setFirstOperand(BigDecimal firstOperand) {
+        this.firstOperand = firstOperand;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    public void setSecondOperand(BigDecimal secondOperand) {
+        this.secondOperand = secondOperand;
     }
 
     public void setResult(BigDecimal result) {
@@ -46,10 +69,10 @@ public class Expression implements Serializable{
 
     @Override
     public String toString() {
-        return dateTime +
-                " : " + firstOperand +
+        return "<" + dateTime.format(FORMATTER) +
+                ">\t" + firstOperand.stripTrailingZeros() +
                 " " + operation +
-                " " + secondOperand +
-                " = " + result;
+                " " + secondOperand.stripTrailingZeros() +
+                " = " + result.stripTrailingZeros();
     }
 }

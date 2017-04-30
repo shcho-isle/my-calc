@@ -9,6 +9,8 @@ public enum Operation {
     MULTIPLY("*"),
     DIVIDE("/");
 
+    private static final int SCALE = 20;
+
     private String symbol;
 
     Operation(String symbol) {
@@ -29,7 +31,7 @@ public enum Operation {
                 result = firstOperand.multiply(secondOperand);
                 break;
             case DIVIDE:
-                result = firstOperand.divide(secondOperand, 10, RoundingMode.HALF_UP).stripTrailingZeros();
+                result = firstOperand.divide(secondOperand, SCALE, RoundingMode.HALF_UP).stripTrailingZeros();
                 break;
             default:
                 throw new UnsupportedOperationException(this.name() + " is unsupported.");
