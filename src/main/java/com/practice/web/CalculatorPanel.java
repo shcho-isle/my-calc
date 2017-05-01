@@ -4,36 +4,26 @@ import com.practice.model.Expression;
 import com.practice.model.Operation;
 import com.practice.repository.ExpressionRepository;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.*;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
 
 import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.List;
 
-public class CalcPage extends WebPage {
-
-    private static final int HISTORY_LENGTH = 10;
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyy kk:mm:ss");
-    private static final Duration UPDATE_INTERVAL = Duration.seconds(5);
+public class CalculatorPanel extends Panel {
 
     @SpringBean
     private ExpressionRepository repository;
 
-    public CalcPage() {
+    public CalculatorPanel(String id) {
+        super(id);
+
         final Expression expression = new Expression();
 
         Form<?> form = new Form("form");
@@ -79,32 +69,7 @@ public class CalcPage extends WebPage {
             }
         };
 
-        Label historyLength = new Label("historyLength", HISTORY_LENGTH);
-        Label updateInterval = new Label("updateInterval", UPDATE_INTERVAL);
-
-        IModel<List<Expression>> latestList = new LoadableDetachableModel<List<Expression>>() {
-            protected List<Expression> load() {
-                return repository.getLatest(HISTORY_LENGTH);
-            }
-        };
-
-        ListView<Expression> listView = new ListView<Expression>("listView", latestList) {
-            protected void populateItem(ListItem item) {
-                Expression expr = (Expression) item.getModelObject();
-                item.add(new Label("dateTime", expr.getDateTime().format(FORMATTER)));
-                item.add(new Label("expression", expr.toString()));
-            }
-        };
-
-        WebMarkupContainer listContainer = new WebMarkupContainer("theContainer");
-        listContainer.setOutputMarkupId(true);
-        listContainer.add(new AjaxSelfUpdatingTimerBehavior(UPDATE_INTERVAL));
-        listContainer.add(listView);
-
         add(form);
-        add(historyLength);
-        add(updateInterval);
-        add(listContainer);
 
         form.add(feedbackPanel);
         form.add(firstOperand);

@@ -1,0 +1,16 @@
+<wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+
+    <span wicket:id="historyLength">historyLength</span> latest expressions.
+    Updated every <span wicket:id="updateInterval">updateInterval</span>.
+    <table wicket:id="theContainer" class="table table-striped display">
+        <tr>
+            <th>DateTime</th>
+            <th>Expression</th>
+        </tr>
+        <tr wicket:id="listView">
+            <td><span wicket:id="dateTime">dateTime</span></td>
+            <td><span wicket:id="expression">expression</span></td>
+        </tr>
+    </table>
+
+</wicket:panel>

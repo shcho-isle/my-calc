@@ -1,0 +1,40 @@
+<wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
+
+    <div class="row">
+        <div class="col-sm-9">
+            <div class="panel panel-default">
+                <form wicket:id="form">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <input type="number" wicket:id="firstOperand" class="form-control"/>
+                            </div>
+
+                            <div class="col-md-2">
+                                <select wicket:id="operation"
+                                        class="selectpicker form-control"></select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <input type="number" wicket:id="secondOperand" class="form-control"/>
+                            </div>
+
+                            <div class="col-md-1">
+                                <input type="submit" wicket:id="submit" class="btn btn-primary"
+                                       value="="/>
+                            </div>
+
+                            <div class="col-md-3">
+                                <input type="number" wicket:id="result" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div wicket:id="feedbackMsg"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</wicket:panel>
