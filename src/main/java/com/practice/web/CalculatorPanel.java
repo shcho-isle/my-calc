@@ -7,7 +7,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.NumberTextField;
+import org.apache.wicket.markup.html.form.validation.AbstractFormValidator;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
@@ -31,20 +33,20 @@ public class CalculatorPanel extends Panel {
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackMsg");
         feedbackPanel.setOutputMarkupId(true);
 
-        final NumberTextField<BigDecimal> firstOperand = new NumberTextField<>("firstOperand", new PropertyModel<BigDecimal>(expression, "firstOperand"));
-        firstOperand.setOutputMarkupId(true);
-        firstOperand.setRequired(true);
+        final NumberTextField<BigDecimal> firstOperandField = new NumberTextField<>("firstOperand", new PropertyModel<BigDecimal>(expression, "firstOperand"));
+        firstOperandField.setOutputMarkupId(true);
+        firstOperandField.setRequired(true);
 
         final DropDownChoice<Operation> operationChoice = new DropDownChoice<>("operation", new PropertyModel<Operation>(expression, "operation"), Arrays.asList(Operation.values()));
         operationChoice.setOutputMarkupId(true);
 
-        final NumberTextField<BigDecimal> secondOperand = new NumberTextField<>("secondOperand", new PropertyModel<BigDecimal>(expression, "secondOperand"));
-        secondOperand.setOutputMarkupId(true);
-        secondOperand.setRequired(true);
+        final NumberTextField<BigDecimal> secondOperandField = new NumberTextField<>("secondOperand", new PropertyModel<BigDecimal>(expression, "secondOperand"));
+        secondOperandField.setOutputMarkupId(true);
+        secondOperandField.setRequired(true);
 
-        final NumberTextField<BigDecimal> result = new NumberTextField<>("result", new PropertyModel<BigDecimal>(expression, "result"));
-        result.setOutputMarkupId(true);
-        result.setEnabled(false);
+        final NumberTextField<BigDecimal> resultField = new NumberTextField<>("result", new PropertyModel<BigDecimal>(expression, "result"));
+        resultField.setOutputMarkupId(true);
+        resultField.setEnabled(false);
 
         AjaxButton ajaxButton = new AjaxButton("submit") {
             @Override
@@ -55,10 +57,10 @@ public class CalculatorPanel extends Panel {
                 expression.updateDateTime();
                 repository.save(expression);
 
-                target.add(firstOperand);
+                target.add(firstOperandField);
                 target.add(operationChoice);
-                target.add(secondOperand);
-                target.add(result);
+                target.add(secondOperandField);
+                target.add(resultField);
                 target.addChildren(getPage(), FeedbackPanel.class);
             }
 
@@ -72,10 +74,25 @@ public class CalculatorPanel extends Panel {
         add(form);
 
         form.add(feedbackPanel);
-        form.add(firstOperand);
+        form.add(firstOperandField);
         form.add(operationChoice);
-        form.add(secondOperand);
-        form.add(result);
+        form.add(secondOperandField);
+        form.add(resultField);
         form.add(ajaxButton);
+        form.add(new AbstractFormValidator() {
+            @Override
+            public FormComponent<?>[] getDependentFormComponents() {
+                return new FormComponent[]{operationChoice, secondOperandField};
+            }
+
+            @Override
+            public void validate(Form<?> form) {
+                Operation operation = operationChoice.getConvertedInput();
+                BigDecimal secondOperand = secondOperandField.getConvertedInput();
+                if (operation == Operation.DIVIDE && secondOperand.compareTo(BigDecimal.ZERO) == 0) {
+                    secondOperandField.error("You can not divide by zero.");
+                }
+            }
+        });
     }
 }

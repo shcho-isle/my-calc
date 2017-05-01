@@ -1,0 +1,7 @@
+select, button {
+    background: #c8e6c9 !important;
+}
+
+.feedbackPanelERROR {
+    color: red;
+}

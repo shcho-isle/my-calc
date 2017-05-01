@@ -1,31 +1,29 @@
 <wicket:panel xmlns:wicket="http://www.w3.org/1999/xhtml">
 
     <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-12">
             <div class="panel panel-default">
                 <form wicket:id="form">
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                <input type="number" wicket:id="firstOperand" class="form-control"/>
+                                <input type="number" wicket:id="firstOperand" class="form-control input-lg"/>
                             </div>
 
                             <div class="col-md-2">
-                                <select wicket:id="operation"
-                                        class="selectpicker form-control"></select>
+                                <select wicket:id="operation" class="form-control input-lg"></select>
                             </div>
 
                             <div class="col-md-3">
-                                <input type="number" wicket:id="secondOperand" class="form-control"/>
+                                <input type="number" wicket:id="secondOperand" class="form-control input-lg"/>
                             </div>
 
                             <div class="col-md-1">
-                                <input type="submit" wicket:id="submit" class="btn btn-primary"
-                                       value="="/>
+                                <button type="submit" wicket:id="submit" class="btn-lg">=</button>
                             </div>
 
                             <div class="col-md-3">
-                                <input type="number" wicket:id="result" class="form-control"/>
+                                <input type="number" wicket:id="result" class="form-control input-lg"/>
                             </div>
                         </div>
                     </div>
