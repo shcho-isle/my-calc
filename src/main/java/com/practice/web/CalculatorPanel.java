@@ -48,8 +48,8 @@ public class CalculatorPanel extends Panel {
 
         AjaxButton ajaxButton = new AjaxButton("submit") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                super.onSubmit(target);
+            protected void onSubmit(AjaxRequestTarget target, Form form) {
+                super.onSubmit(target, form);
 
                 expression.setResult(expression.getOperation().calculate(expression.getFirstOperand(), expression.getSecondOperand()));
                 expression.updateDateTime();
@@ -63,9 +63,9 @@ public class CalculatorPanel extends Panel {
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target) {
+            protected void onError(AjaxRequestTarget target, Form form) {
                 target.add(feedbackPanel);
-                super.onError(target);
+                super.onError(target, form);
             }
         };
 
