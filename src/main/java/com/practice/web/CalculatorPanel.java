@@ -28,7 +28,7 @@ public class CalculatorPanel extends Panel {
 
         final Expression expression = new Expression();
 
-        Form<?> form = new Form("form");
+        Form<Void> expressionForm = new Form<>("form");
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackMsg");
         feedbackPanel.setOutputMarkupId(true);
@@ -49,6 +49,9 @@ public class CalculatorPanel extends Panel {
         resultField.setEnabled(false);
 
         AjaxButton ajaxButton = new AjaxButton("submit") {
+
+            private static final long serialVersionUID = 8429547600788448785L;
+
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form form) {
                 super.onSubmit(target, form);
@@ -71,15 +74,15 @@ public class CalculatorPanel extends Panel {
             }
         };
 
-        add(form);
+        add(expressionForm);
 
-        form.add(feedbackPanel);
-        form.add(firstOperandField);
-        form.add(operationChoice);
-        form.add(secondOperandField);
-        form.add(resultField);
-        form.add(ajaxButton);
-        form.add(new AbstractFormValidator() {
+        expressionForm.add(feedbackPanel);
+        expressionForm.add(firstOperandField);
+        expressionForm.add(operationChoice);
+        expressionForm.add(secondOperandField);
+        expressionForm.add(resultField);
+        expressionForm.add(ajaxButton);
+        expressionForm.add(new AbstractFormValidator() {
             @Override
             public FormComponent<?>[] getDependentFormComponents() {
                 return new FormComponent[]{operationChoice, secondOperandField};

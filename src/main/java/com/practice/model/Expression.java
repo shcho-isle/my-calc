@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 public class Expression implements Serializable {
 
+    private static final long serialVersionUID = 6313687918837215931L;
+
     private LocalDateTime dateTime;
 
     private BigDecimal firstOperand;
